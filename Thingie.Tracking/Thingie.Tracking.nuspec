@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Thingie.Tracking.A</id>
+    <version>1.0.0.0</version>
+    <projectUrl>https://github.com/arumata/Thingie.Tracking.git</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <authors>anakic</authors>
+    <description>Tracking Library</description>
+  </metadata>
+  <files>
+    <file src="bin\Release\Thingie.Tracking.dll" target="lib\net40" />
+    <file src="bin\Release\Thingie.Tracking.pdb" target="lib\net40" />
+  </files>
+</package>
