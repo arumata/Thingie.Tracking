@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Thingie.Tracking.A</id>
-    <version>1.0.0.3</version>
+    <version>1.0.0.4</version>
     <projectUrl>https://github.com/arumata/Thingie.Tracking.git</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <authors>anakic</authors>
