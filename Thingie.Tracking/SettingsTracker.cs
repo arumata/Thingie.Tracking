@@ -90,6 +90,12 @@ namespace Thingie.Tracking
                 PersistState(config.TargetReference.Target);
         }
 
+        public IEnumerable<TrackingConfiguration> FindExistingConfigsByType(object target)
+        {
+            var type = target.GetType();
+            return _configurations.Where(cfg => type == cfg.TargetReference.Target.GetType());
+        }
+
         #region private helper methods
 
         private TrackingConfiguration FindExistingConfig(object target)
