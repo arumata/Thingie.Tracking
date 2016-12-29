@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using System.Reflection;
+using System.Windows;
 using Thingie.Tracking.DataStoring;
 using Thingie.Tracking.Serialization;
-using System.Windows;
-using System.Diagnostics;
-using System.Reflection;
-using System.Web;
-using System.IO;
 
 namespace Thingie.Tracking
 {
     public class SettingsTracker
     {
-        List<TrackingConfiguration> _configurations = new List<TrackingConfiguration>();
-
-        public string Name { get; set; }
-
-        public IObjectStore ObjectStore { get; private set; }
+        private readonly List<TrackingConfiguration> _configurations = new List<TrackingConfiguration>();
 
         /// <summary>
-        /// Uses a BinarySerializer as the serializer, and a FileDataStore as the data store.
-        /// Uses the <see cref="AssemblyCompanyAttribute"/> and <see cref="AssemblyTitleAttribute"/>
-        /// to construct the path for the settings file, which it combines with the user's ApplicationData
-        /// folder.
+        ///     Uses a BinarySerializer as the serializer, and a FileDataStore as the data store.
+        ///     Uses the <see cref="AssemblyCompanyAttribute" /> and <see cref="AssemblyTitleAttribute" />
+        ///     to construct the path for the settings file, which it combines with the user's ApplicationData
+        ///     folder.
         /// </summary>
         /// <param name="baseFolder"></param>
         public SettingsTracker()
@@ -43,24 +36,30 @@ namespace Thingie.Tracking
             WireUpAutomaticPersist();
         }
 
+        public string Name { get; set; }
+
+        public IObjectStore ObjectStore { get; private set; }
+
         #region automatic persisting
+
         protected virtual void WireUpAutomaticPersist()
         {
-            if (System.Windows.Application.Current != null)//wpf
-                System.Windows.Application.Current.Exit += (s, e) => { PersistAutomaticTargets(); };
+            if (Application.Current != null) //wpf
+                Application.Current.Exit += (s, e) => { PersistAutomaticTargets(); };
             else //winforms
                 System.Windows.Forms.Application.ApplicationExit += (s, e) => { PersistAutomaticTargets(); };
         }
+
         #endregion
 
         /// <summary>
-        /// Creates or retrieves the tracking configuration for the speficied object.
+        ///     Creates or retrieves the tracking configuration for the speficied object.
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
         public TrackingConfiguration Configure(object target)
         {
-            TrackingConfiguration config = FindExistingConfig(target);
+            var config = FindExistingConfig(target);
             if (config == null)
                 _configurations.Add(config = new TrackingConfiguration(target, this));
             return config;
@@ -68,26 +67,26 @@ namespace Thingie.Tracking
 
         public void ApplyAllState()
         {
-            _configurations.ForEach(c=>c.Apply());
+            _configurations.ForEach(c => c.Apply());
         }
 
         public void ApplyState(object target)
         {
-            TrackingConfiguration config = FindExistingConfig(target);
+            var config = FindExistingConfig(target);
             Debug.Assert(config != null);
             config.Apply();
         }
 
         public void PersistState(object target)
         {
-            TrackingConfiguration config = FindExistingConfig(target);
+            var config = FindExistingConfig(target);
             Debug.Assert(config != null);
             config.Persist();
         }
 
         public void PersistAutomaticTargets()
         {
-            foreach (TrackingConfiguration config in _configurations.Where(cfg => cfg.Mode == PersistModes.Automatic && cfg.TargetReference.IsAlive))
+            foreach (var config in _configurations.Where(cfg => cfg.Mode == PersistModes.Automatic && cfg.TargetReference.IsAlive))
                 PersistState(config.TargetReference.Target);
         }
 
@@ -97,7 +96,7 @@ namespace Thingie.Tracking
         {
             return _configurations.SingleOrDefault(cfg => cfg.TargetReference.Target == target);
         }
-        
+
         #endregion
     }
 }
