@@ -80,9 +80,9 @@ namespace Thingie.Tracking
 
         #region apply/persist events
         public event EventHandler<TrackingOperationEventArgs> ApplyingState;
-        private bool OnApplyingState()
+        private bool OnApplyingState(bool withEvents)
         {
-            if (ApplyingState != null)
+            if (withEvents && ApplyingState != null)
             {
                 TrackingOperationEventArgs args = new TrackingOperationEventArgs(this);
                 ApplyingState(this, args);
@@ -93,9 +93,9 @@ namespace Thingie.Tracking
         }
 
         public event EventHandler AppliedState;
-        private void OnAppliedState()
+        private void OnAppliedState(bool withEvents)
         {
-            if (AppliedState != null)
+            if (withEvents && AppliedState != null)
                 AppliedState(this, EventArgs.Empty);
         }
 
@@ -160,12 +160,22 @@ namespace Thingie.Tracking
         }
 
         bool _applied = false;
-        [DebuggerHidden]
+
         public void Apply()
         {
+            DoApply(true);
+        }
+
+        internal void JustApply()
+        {
+            DoApply(false);
+        }
+
+        private void DoApply(bool withEvents)
+        {
             Stopwatch sw = new Stopwatch();
-            
-            if (TargetReference.IsAlive && OnApplyingState())
+
+            if (TargetReference.IsAlive && OnApplyingState(withEvents))
             {
                 foreach (string propertyName in Properties)
                 {
@@ -186,7 +196,7 @@ namespace Thingie.Tracking
                     }
                 }
 
-                OnAppliedState();
+                OnAppliedState(withEvents);
             }
             _applied = true;
         }

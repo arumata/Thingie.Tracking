@@ -101,6 +101,17 @@ namespace Thingie.Tracking
             _configurations.Remove(config);
         }
 
+        public void ApplyAllByType(object target, bool exceptThisTarget = true)
+        {
+            var configurations = FindExistingConfigsByType(target);
+            if (exceptThisTarget)
+                configurations = configurations.Where(x => x != target);
+            foreach (var trackingConfiguration in configurations)
+            {
+                trackingConfiguration.JustApply();
+            }
+        }
+
         #region private helper methods
 
         private TrackingConfiguration FindExistingConfig(object target)
