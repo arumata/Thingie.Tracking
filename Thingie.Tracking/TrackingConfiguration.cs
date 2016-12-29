@@ -85,6 +85,9 @@ namespace Thingie.Tracking
 
         public void Persist()
         {
+            if (_applyingInProgress)
+                return;
+
             if (TargetReference.IsAlive && OnPersistingState())
             {
                 foreach (var propertyName in Properties)
@@ -117,8 +120,11 @@ namespace Thingie.Tracking
             DoApply(false);
         }
 
+        private bool _applyingInProgress;
+
         private void DoApply(bool withEvents)
         {
+            _applyingInProgress = true;
             var sw = new Stopwatch();
 
             if (TargetReference.IsAlive && OnApplyingState(withEvents))
@@ -146,6 +152,7 @@ namespace Thingie.Tracking
                 OnAppliedState(withEvents);
             }
             _applied = true;
+            _applyingInProgress = false;
         }
 
         public TrackingConfiguration AddProperties(params string[] properties)

@@ -105,7 +105,7 @@ namespace Thingie.Tracking
         {
             var configurations = FindExistingConfigsByType(target);
             if (exceptThisTarget)
-                configurations = configurations.Where(x => x != target);
+                configurations = configurations.Where(x => x.TargetReference.Target != target);
             foreach (var trackingConfiguration in configurations)
             {
                 trackingConfiguration.JustApply();
