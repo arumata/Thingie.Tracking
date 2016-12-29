@@ -96,6 +96,11 @@ namespace Thingie.Tracking
             return _configurations.Where(cfg => cfg.TargetReference.IsAlive && type == cfg.TargetReference.Target.GetType());
         }
 
+        public void RemoveConfiguration(TrackingConfiguration config)
+        {
+            _configurations.Remove(config);
+        }
+
         #region private helper methods
 
         private TrackingConfiguration FindExistingConfig(object target)
