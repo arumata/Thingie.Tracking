@@ -93,7 +93,7 @@ namespace Thingie.Tracking
         public IEnumerable<TrackingConfiguration> FindExistingConfigsByType(object target)
         {
             var type = target.GetType();
-            return _configurations.Where(cfg => type == cfg.TargetReference.Target.GetType());
+            return _configurations.Where(cfg => cfg.TargetReference.IsAlive && type == cfg.TargetReference.Target.GetType());
         }
 
         #region private helper methods
